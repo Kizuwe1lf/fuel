@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package signaling.v1;
+
+option go_package = "./signaling/v1";
+
+service Signaling {
+  rpc Signal(stream SignalRequest) returns (stream SignalResponse);
+}
+
+message SignalRequest {
+  oneof payload {
+    Join join = 1;
+    SessionDescription offer = 2;
+    ICECandidate candidate = 3;
+    SessionDescription answer = 4;
+  }
+}
+
+message SignalResponse {
+  oneof payload {
+    SessionDescription answer = 1;
+    ICECandidate candidate = 2;
+    SessionDescription offer = 3;
+  }
+}
+
+message Join {
+  string room_id = 1;
+  string user_id = 2;
+}
+
+message SessionDescription {
+  string sdp = 1;
+  string type = 2;
+}
+
+message ICECandidate {
+  string sdpMid = 1;
+  int32 sdpMLineIndex = 2;
+  string candidate = 3;
+}
